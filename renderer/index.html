@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; connect-src 'self' http://127.0.0.1:11435;">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NexusEco AI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-lockup"><span class="brand-nexus">Nexus</span><span class="brand-eco"><i>e</i><i>c</i><i>o</i></span><span class="brand-ai">AI</span></div>
+      <button class="new-chat" id="newChat" aria-label="Start a new chat"><span class="plus">＋</span><span>New chat</span></button>
+      <div class="history-label">Your chats</div>
+      <div class="history-list" id="historyList"></div>
+      <div class="sidebar-bottom">
+        <button class="side-link" data-page="eco"><span class="line-icon">◌</span>Eco checker</button>
+        <button class="side-link" data-page="learn"><span class="line-icon">▧</span>Read &amp; learn</button>
+        <button class="side-link" data-page="about"><span class="line-icon">◉</span>About the AI</button>
+        <button class="side-link" data-page="settings"><span class="line-icon">⚙</span>Settings</button>
+        <div class="side-divider"></div>
+        <button class="side-link side-quiet" data-page="terms">Terms &amp; privacy</button>
+        <div class="local-profile"><span class="profile-dot"></span><span>Local on this device</span><span class="offline-pill" id="offlinePill">offline</span></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu icon-button" id="mobileMenu" aria-label="Open sidebar">☰</button>
+        <div class="topbar-title" id="topbarTitle">New chat</div>
+        <div class="topbar-actions">
+          <span class="runtime-state" id="runtimeState"><span class="state-dot"></span>Model not loaded</span>
+          <button class="icon-button theme-toggle" id="themeToggle" aria-label="Toggle light mode" title="Toggle light mode">☼</button>
+        </div>
+      </header>
+
+      <section class="view view-chat active" id="chatView">
+        <div class="welcome" id="welcome">
+          <div class="welcome-mark"><span class="brand-nexus">Nexus</span><span class="brand-eco"><i>e</i><i>c</i><i>o</i></span><span class="brand-ai">AI</span></div>
+          <div class="welcome-grid">
+            <section class="welcome-column"><div class="column-icon">✳</div><h2>Try asking</h2><button class="prompt-card" data-prompt="Explain how a computer stores a number in binary.">“Explain binary in simple terms”</button><button class="prompt-card" data-prompt="Write a small Python program that asks for a number and checks whether it is prime. Explain how it works.">“Help me write a Python program”</button><button class="prompt-card" data-prompt="Solve 3(x - 2) = 18 and show the steps.">“Solve an equation step by step”</button></section>
+            <section class="welcome-column"><div class="column-icon">⌘</div><h2>What it can do</h2><div class="info-card">Runs on this computer after the model is downloaded</div><div class="info-card">Works without a cloud account or API key</div><div class="info-card">Keeps chats in local app storage</div></section>
+            <section class="welcome-column"><div class="column-icon">△</div><h2>Keep in mind</h2><div class="info-card">Answers can be inaccurate or incomplete</div><div class="info-card">Its knowledge may not include recent events</div><div class="info-card">Check important facts and generated code</div></section>
+          </div>
+          <button class="learn-feature" data-page="learn"><span class="feature-art"></span><span class="feature-copy"><b>What makes our AI different</b><small>Learn how NexusEco works on your device</small></span><span class="feature-arrow">↗</span></button>
+          <div class="welcome-model" id="welcomeModel"></div>
+        </div>
+        <div class="messages" id="messages" aria-live="polite"></div>
+        <div class="composer-wrap">
+          <form class="composer" id="chatForm">
+            <textarea id="messageInput" rows="1" placeholder="Message NexusEco AI" aria-label="Message NexusEco AI"></textarea>
+            <button type="button" class="composer-action" id="stopButton" title="Stop response" hidden>■</button>
+            <button type="submit" class="send-button" id="sendButton" aria-label="Send message">↑</button>
+          </form>
+          <p class="accuracy-note">NexusEco AI can make mistakes. Check important information. Responses are generated locally on this device.</p>
+        </div>
+      </section>
+
+      <section class="view content-view" id="ecoView">
+        <div class="page-content"><p class="eyebrow">LOCAL IMPACT</p><h1>Eco checker</h1><p class="page-intro">A transparent activity summary for this local session. This app does not have a power meter, and environmental comparisons depend on assumptions.</p>
+          <div class="eco-status"><span class="status-check">✓</span><div><b>Model runs on this device</b><p>After the model is downloaded, NexusEco sends no chat messages to a cloud AI service.</p></div></div>
+          <div class="metric-grid"><article class="metric-card"><span>Messages answered</span><strong id="ecoResponses">0</strong><small>This chat</small></article><article class="metric-card"><span>Approx. local compute time</span><strong id="ecoSeconds">0 sec</strong><small>Timed by the app</small></article><article class="metric-card"><span>Estimated device energy</span><strong id="ecoEnergy">—</strong><small>Uses your editable wattage estimate</small></article></div>
+          <h2 class="section-heading">Optional cloud comparison</h2><p class="muted-copy">These calculations use assumptions you enter. They are not measured or verified savings. Air quality and per-chat land impact are not measured.</p>
+          <div class="metric-grid comparison-grid"><article class="metric-card"><span>Cloud-baseline water estimate</span><strong id="ecoWater">Not set</strong><small>Baseline × approximate output tokens; not measured water saved</small></article><article class="metric-card"><span>Estimated climate difference</span><strong id="ecoCarbon">Not set</strong><small>Approximate CO₂-equivalent vs. baseline; not an air-quality measure</small></article><article class="metric-card"><span>Land impact</span><strong class="text-value">Not measurable per chat</strong><small>No reliable per-response land metric</small></article></div>
+          <details class="method-details"><summary>How these estimates work</summary><p>Local compute time is recorded by the app. Energy is estimated as device watts × response seconds ÷ 3,600; set the watts value in Settings. Water and climate comparisons require a baseline for cloud inference. Nexus Eco has no verified universal baseline, so you can enter your own and see it clearly identified as an assumption. Land use depends on data-center construction, electricity supply, and hardware production; this app does not claim a per-chat land saving.</p></details>
+          <button class="primary-button" data-page="settings">Set estimate assumptions</button>
+        </div>
+      </section>
+
+      <section class="view content-view" id="learnView">
+        <div class="page-content"><p class="eyebrow">READ OFFLINE</p><h1>Read &amp; learn</h1><p class="page-intro">Short explainers about local AI and the resources behind it. These articles are included in the app and work offline.</p><div class="article-grid" id="articleGrid"></div><article class="article-reader hidden" id="articleReader"><button class="back-link" id="backToArticles">← All articles</button><div id="articleBody"></div></article></div>
+      </section>
+
+      <section class="view content-view" id="aboutView">
+        <div class="page-content"><p class="eyebrow">MODEL INFORMATION</p><h1>About the AI</h1><p class="page-intro">NexusEco AI is a local desktop chat app. The model answers on your computer after its files are downloaded.</p><div class="about-card"><div class="about-logo"><span class="brand-nexus">Nexus</span><span class="brand-eco"><i>e</i><i>c</i><i>o</i></span><span class="brand-ai">AI</span></div><div class="about-facts"><div><span>App</span><b>NexusEco AI</b></div><div><span>Model release</span><b>NexusEco-3B</b></div><div><span>Base model</span><b>Qwen2.5-3B-Instruct</b></div><div><span>Model format</span><b>GGUF Q4_K_M</b></div><div><span>Inference runtime</span><b>llama.cpp</b></div><div><span>Network use</span><b>Model download only; chat is local</b></div></div></div><div class="note-box"><b>About the fine-tune</b><p>NexusEco-3B is a Qwen-based fine-tune, not a model trained from scratch. The release should preserve the base model’s license and attribution. Review the bundled third-party notices before redistributing.</p></div><h2 class="section-heading">What makes this different?</h2><p class="body-copy">Most online assistants send each prompt to remote servers. NexusEco downloads an open-weight model once, then runs it locally using llama.cpp. Local use avoids sending each chat request to an inference provider, but it still uses your device’s electricity and depends on the electricity mix and hardware.</p></div>
+      </section>
+
+      <section class="view content-view" id="settingsView">
+        <div class="page-content"><p class="eyebrow">PREFERENCES</p><h1>Settings</h1><p class="page-intro">Manage the model download and local runtime.</p><div class="settings-card"><label for="modelUrl">Public direct link to your NexusEco GGUF</label><input id="modelUrl" type="url" placeholder="https://huggingface.co/.../resolve/main/model.gguf?download=true"><p class="field-help">Use the file’s direct download link, not just the model page. The repository must be public for users to download without a token.</p><div class="settings-actions"><button class="secondary-button" id="saveUrl">Save link</button><button class="secondary-button" id="chooseFolder">Choose model folder</button></div><p class="stored-path" id="modelFolderPath"></p></div>
+          <div class="settings-card"><label for="contextSize">Context length</label><select id="contextSize"><option value="2048">2,048 — lower memory use</option><option value="4096">4,096 — recommended</option><option value="8192">8,192 — uses more memory</option></select><label class="spaced-label" for="deviceWatts">Estimated device power while responding (watts)</label><input id="deviceWatts" type="number" min="1" max="1000" step="1"><p class="field-help">Used only for a rough local energy estimate. It is not a live power measurement.</p><label class="spaced-label" for="cloudWater">Optional cloud water baseline (ml per 1,000 output tokens)</label><input id="cloudWater" type="number" min="0" max="100000" step="any" placeholder="Leave blank if unknown"><label class="spaced-label" for="cloudCarbon">Optional cloud climate baseline (g CO₂e per 1,000 output tokens)</label><input id="cloudCarbon" type="number" min="0" max="100000" step="any" placeholder="Leave blank if unknown"><label class="spaced-label" for="gridCarbon">Estimated electricity intensity (g CO₂e per kWh)</label><input id="gridCarbon" type="number" min="0" max="2000" step="any" placeholder="Optional"><p class="field-help">Comparison values are user-provided assumptions, not measured or verified savings. Leave blank to show no comparison.</p><button class="secondary-button" id="saveSettings">Save settings</button></div>
+          <div class="settings-card"><label>Model</label><div class="model-row"><span class="model-state-dot" id="modelStateDot"></span><div><b id="modelStateText">Checking model…</b><small id="modelStatePath"></small></div><button class="secondary-button compact" id="downloadOrChat">Check</button></div><div class="download-progress hidden" id="downloadProgress"><div class="progress-track"><span id="progressFill"></span></div><div class="progress-meta"><span id="progressText">Preparing download…</span><button class="text-button" id="cancelDownload">Pause</button></div></div></div>
+          <div class="settings-card"><label>Local data</label><p class="field-help">Chat history and preferences are stored in this app profile on this computer. No account is required. Clear chat history here; deleting chats does not remove the model file.</p><button class="secondary-button danger-button" id="clearHistory">Clear chat history</button></div>
+        </div>
+      </section>
+
+      <section class="view content-view" id="termsView">
+        <div class="page-content"><p class="eyebrow">NEXUSECO AI</p><h1>Terms &amp; privacy</h1><p class="page-intro">Plain-language terms and privacy information for this local desktop app.</p><div class="policy-block"><h2>Privacy</h2><p>NexusEco AI stores chat history and settings on this device. Chat prompts are sent to the local llama.cpp process at 127.0.0.1 only. The app does not send chat text to Nexus Eco AI servers. The model download is an internet request to the model host you choose. You can delete local chat history and model files at any time.</p><h2>Use of the app</h2><p>You may use the app for lawful personal, educational, and development purposes. Do not use generated output as a substitute for professional medical, legal, financial, or safety advice. Review generated code before running it.</p><h2>AI output disclaimer</h2><p>Responses are generated automatically and can be false, incomplete, biased, or outdated. Nexus Eco AI does not guarantee accuracy, availability, or fitness for a particular purpose. You are responsible for checking information and deciding how to use outputs.</p><h2>Model and third-party software</h2><p>NexusEco-3B is based on Qwen2.5-3B-Instruct and uses llama.cpp. Their licenses and notices are included with the project and must remain available when redistributing those components. Model weights may have additional terms; check the model repository before sharing the model file.</p><h2>Cost</h2><p>The app is free to use. Downloading the model requires an internet connection and data; running the model uses the computer’s resources.</p><h2>Changes</h2><p>If these terms change materially, the app should show the updated terms and ask for acceptance again.</p><p class="policy-disclaimer">This is starter policy text for the project, not legal advice. Have it reviewed before public distribution.</p></div></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="consentModal" role="dialog" aria-modal="true" aria-labelledby="consentTitle"><div class="consent-card"><div class="brand-lockup modal-brand"><span class="brand-nexus">Nexus</span><span class="brand-eco"><i>e</i><i>c</i><i>o</i></span><span class="brand-ai">AI</span></div><h1 id="consentTitle">A few things before you start</h1><p>NexusEco AI runs a downloaded model on this computer. Please review how the app stores chats and the limits of AI-generated answers.</p><div class="consent-scroll"><h2>Privacy</h2><p>Chats and settings stay in this app’s local storage. Prompts go to the local model process on this device. Model download uses the public model link you provide.</p><h2>AI accuracy</h2><p>AI may produce inaccurate or incomplete answers. Check important information and review generated code before running it.</p><h2>Model terms</h2><p>NexusEco-3B is based on Qwen2.5-3B-Instruct. The model and runtime are third-party software with their own licenses and notices.</p><p>Full terms are available in the app’s “Terms &amp; privacy” section.</p></div><label class="consent-check"><input type="checkbox" id="agreeCheck"><span>I agree to the Terms &amp; privacy notice and understand AI can make mistakes.</span></label><button class="primary-button full-button" id="acceptTerms" disabled>Continue</button><small class="free-note">Free to use · No account · Local chat</small></div></div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
