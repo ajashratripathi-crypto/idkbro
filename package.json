@@ -1,0 +1,48 @@
+{
+  "name": "nexuseco-ai",
+  "version": "0.1.0",
+  "description": "NexusEco AI — private local desktop chat",
+  "main": "main.js",
+  "author": "Nexus Eco AI",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "fetch-runtime": "node scripts/fetch-llama.cjs",
+    "dist:win": "npm run fetch-runtime && electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "ai.nexuseco.desktop",
+    "productName": "NexusEco AI",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "vendor/llama",
+        "to": "llama",
+        "filter": ["**/*"]
+      }
+    ],
+    "win": {
+      "target": ["nsis"]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "NexusEco AI"
+    }
+  }
+}
